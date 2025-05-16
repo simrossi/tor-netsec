@@ -1,0 +1,8 @@
+# If enabled, adjusts default values of the configuration to simplify the setup of a testing Tor network.
+TestingTorNetwork 1
+
+# Listen on specified port for connections from applications
+SocksPort 9050
+
+# Directory authorities information
+DirAuthority da1 orport=9001 no-v2 v3ident=...
