@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Gnome Invasion Service</title>
+  <style>
+    body {
+      background: #222;
+      color: #d1c7a1;
+      font-family: 'Courier New', Courier, monospace;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: #333;
+      padding: 20px;
+      text-align: center;
+      border-bottom: 3px dashed #a67c00;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.5em;
+      color: #f3d250;
+      text-shadow: 0 0 10px #f3d250;
+    }
+    .container {
+      max-width: 700px;
+      margin: 30px auto;
+      background: #1a1a1a;
+      padding: 20px;
+      border: 2px dotted #a67c00;
+      border-radius: 8px;
+      box-shadow: 0 0 15px #a67c00;
+    }
+    .description {
+      font-size: 1.1em;
+      line-height: 1.4em;
+      margin-bottom: 25px;
+    }
+    .image-holder {
+      width: 100%;
+      max-height: 350px;
+      border: 2px solid #a67c00;
+      background: #000;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #a67c00;
+      font-style: italic;
+      font-size: 1.2em;
+      user-select: none;
+    }
+    .image-holder img {
+      max-width: 100%;
+      max-height: 350px;
+      display: block;
+      border: none;
+    }
+    .contact-btn {
+      background: #f3d250;
+      color: #222;
+      padding: 15px 30px;
+      font-weight: bold;
+      font-size: 1.2em;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      box-shadow: 0 0 10px #f3d250;
+      transition: background 0.3s ease;
+      width: 100%;
+    }
+    .contact-btn:hover {
+      background: #d6bc2a;
+      box-shadow: 0 0 20px #d6bc2a;
+    }
+    footer {
+      text-align: center;
+      color: #777;
+      font-size: 0.9em;
+      margin-top: 50px;
+      padding-bottom: 20px;
+      user-select: none;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Gnome Invasion Service</h1>
+</header>
+
+<div class="container">
+  <div class="description">
+    Want your neighbors talking? We’ll sneak into your yard (or theirs) and fill it with hundreds of garden gnomes.  
+    <br><br>
+    Discreet. Affordable. Questionable.  
+    <br><br>
+    Our *expert* team guarantees a gnome takeover that'll have your lawn looking… unforgettable.  
+    <br><br>
+    Call us now before your lawn stays boring forever.
+  </div>
+
+  <div class="image-holder" id="image-holder">
+    <!-- Replace with your image by uncommenting below and adding a URL -->
+    <img src="gnomed1.jpg" alt="Gnome invasion" /> 
+   
+  </div>
+
+  <button class="contact-btn" onclick="alert('Sorry, our gnomes are currently busy invading another garden...')">Contact Us</button>
+</div>
+
+<footer>
+  Gnome Invasion Service &copy; 2025 — Because your lawn deserves chaos.
+</footer>
+
+</body>
+</html>

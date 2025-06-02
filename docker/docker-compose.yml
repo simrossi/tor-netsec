@@ -1,0 +1,130 @@
+services:
+  # Directory Authorities
+  da1:
+    image: da1
+    container_name: da1
+    networks:
+      tor:
+        ipv4_address: 10.0.3.1
+    command: sudo -u debian-tor tor
+    restart: unless-stopped
+
+  da2:
+    image: da2
+    container_name: da2
+    networks:
+      tor:
+        ipv4_address: 10.0.3.2
+    command: sudo -u debian-tor tor
+    restart: unless-stopped
+
+  da3:
+    image: da3
+    container_name: da3
+    networks:
+      tor:
+        ipv4_address: 10.0.3.3
+    command: sudo -u debian-tor tor
+    restart: unless-stopped
+
+  # Relay Nodes
+  relay1:
+    image: relay1
+    container_name: relay1
+    networks:
+      tor:
+        ipv4_address: 10.0.2.1
+    command: sudo -u debian-tor tor
+    restart: unless-stopped
+
+  relay2:
+    image: relay2
+    container_name: relay2
+    networks:
+      tor:
+        ipv4_address: 10.0.2.2
+    command: sudo -u debian-tor tor
+    restart: unless-stopped
+
+  relay3:
+    image: relay3
+    container_name: relay3
+    networks:
+      tor:
+        ipv4_address: 10.0.2.3
+    command: sudo -u debian-tor tor
+    restart: unless-stopped
+
+  relay4:
+    image: relay4
+    container_name: relay4
+    networks:
+      tor:
+        ipv4_address: 10.0.2.4
+    command: sudo -u debian-tor tor
+    restart: unless-stopped
+
+  relay5:
+    image: relay5
+    container_name: relay5
+    networks:
+      tor:
+        ipv4_address: 10.0.2.5
+    command: sudo -u debian-tor tor
+    restart: unless-stopped
+
+  # Exit Nodes
+  exit1:
+    image: exit1
+    container_name: exit1
+    networks:
+      tor:
+        ipv4_address: 10.0.2.6
+    command: sudo -u debian-tor tor
+    restart: unless-stopped
+
+  exit2:
+    image: exit2
+    container_name: exit2
+    networks:
+      tor:
+        ipv4_address: 10.0.2.7
+    command: sudo -u debian-tor tor
+    restart: unless-stopped
+
+  exit3:
+    image: exit3
+    container_name: exit3
+    networks:
+      tor:
+        ipv4_address: 10.0.2.8
+    command: sudo -u debian-tor tor
+    restart: unless-stopped
+
+  # Client
+  client1:
+    image: client1
+    container_name: client1
+    networks:
+      - tor
+    ports:
+      - "9050:9050"
+    command: sudo -u debian-tor tor
+    restart: unless-stopped
+
+  # Hidden Services
+  hs1:
+    image: hs1
+    container_name: hs1
+    networks:
+      tor:
+        ipv4_address: 10.0.4.1
+    command: bash -c "nginx && sudo -u debian-tor tor"
+    restart: unless-stopped
+
+networks:
+  tor:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.0.0.0/16

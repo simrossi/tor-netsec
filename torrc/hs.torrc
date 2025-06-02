@@ -1,0 +1,25 @@
+# If enabled, adjusts default values of the configuration to simplify the setup of a testing Tor network.
+TestingTorNetwork 1
+
+# This option is used when bootstrapping a new Tor network.
+# If enabled, don't perform self-reachability testing. Just upload server descriptor immediately.
+AssumeReachable 1
+
+# Disable IPv6 address resolution, IPv6 ORPorts and IPv6 reachability checks.
+AddressDisableIPv6 1
+
+# Activate control port for Nyx
+ControlPort 9051
+HashedControlPassword 16:50718F5106BBABC360E50C692440E9EED5413930420ADB31C50515D0CA # Hashed password 'tor'
+
+# Disable client port from listening for connections from applications
+SocksPort 0
+
+# Specify location of hidden service files
+HiddenServiceDir /var/lib/tor/.tor/hs/
+
+# Specify where to forward requests
+HiddenServicePort 80 127.0.0.1:80
+
+# Directory authorities information
+DirAuthority da1 orport=9001 no-v2 v3ident=...
