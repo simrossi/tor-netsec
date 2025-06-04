@@ -1,16 +1,38 @@
 #!/usr/bin/env python3
+import csv
 import time
 import socket
 import pickle
 import threading
+from scapy.all import *
 
 # Configuration
-EXIT_ADDR = "192.168.2.4"
+EXIT_ADDR = "10.0.10.2"
 LISTEN_PORT = 9999
 
 # Array to store all received packets
-all_packets = []
-packets_lock = threading.Lock()
+entry_packets = []
+exit_packets = []
+packet_lock = threading.Lock()
+
+def packet_handler(packet):
+    """Handle captured packets"""
+    if IP in packet and packet[IP].src == EXIT_ADDR and len(packet) == 602: # Standard tor packet size 512B
+        endpoint = None
+
+        # Check for TCP and Raw layers (likely to contain HTTP)
+        if packet.haslayer(TCP) and packet.haslayer(Raw):
+            payload = packet[Raw].load.decode(errors='ignore')
+
+            with packet_lock:   
+                packet_info = {
+                    'src': packet[IP].src,
+                    'dst': packet[IP].dst,
+                    'time': time.time(),
+                    'size': len(packet),
+                    #'payload': payload
+                }
+                exit_packets.append(packet_info)
 
 def receive_packets():
     """Listen for incoming packet data"""
@@ -24,9 +46,9 @@ def receive_packets():
             data, addr = sock.recvfrom(65535)  # Max UDP packet size
             packets = pickle.loads(data)
             
-            with packets_lock:
-                all_packets.extend(packets)
-                print(f"Received {len(packets)} packets from {addr[0]}. Total stored: {len(all_packets)}")
+            with packet_lock:
+                entry_packets.extend(packets)
+                print(f"Received {len(packets)} packets from {addr[0]}. Total stored: {len(entry_packets)}")
                 
         except Exception as e:
             print(f"Error receiving packets: {e}")
@@ -36,12 +58,19 @@ def print_stats():
     import time
     while True:
         time.sleep(10)
-        with packets_lock:
-            if all_packets:
+        with packet_lock:
+            if entry_packets:
                 print(f"\n--- Statistics ---")
-                print(f"Total packets stored: {len(all_packets)}")
-                print(f"Latest packet: {all_packets[-1]}")
+                print(f"Total packets stored: {len(entry_packets)}")
+                print(f"Latest packet: {entry_packets[-1]}")
                 print("-----------------\n")
+
+def save_to_csv(filename, data):
+    """Save packet data to a CSV file"""
+    with open(filename, mode='w', newline='') as file:
+        writer = csv.DictWriter(file, fieldnames=data[0].keys())
+        writer.writeheader()
+        writer.writerows(data)
 
 if __name__ == "__main__":
     print(f"Starting packet receiver on {EXIT_ADDR}:{LISTEN_PORT}")
@@ -53,6 +82,9 @@ if __name__ == "__main__":
     # Start stats thread
     stats_thread = threading.Thread(target=print_stats, daemon=True)
     stats_thread.start()
+
+    # Start packet capture
+    sniff(filter=f"src host {EXIT_ADDR}", prn=packet_handler, store=0)
     
     # Keep main thread alive
     try:
@@ -60,5 +92,7 @@ if __name__ == "__main__":
             time.sleep(1)
     except KeyboardInterrupt:
         print("\nShutting down...")
-        with packets_lock:
-            print(f"Final count: {len(all_packets)} packets stored")
+        with packet_lock:
+            save_to_csv('entry_packets.csv', entry_packets)
+            save_to_csv('exit_packets.csv', exit_packets)
+            print(f"Final count: {len(entry_packets)} packets stored")

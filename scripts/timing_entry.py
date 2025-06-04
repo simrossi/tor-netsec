@@ -7,7 +7,7 @@ from scapy.all import *
 
 # Configuration
 ENTRY_ADDR = "192.168.2.1"
-EXIT_HOST = "192.168.2.4"
+EXIT_ADDR = "192.168.2.4"
 EXIT_PORT = 9999
 
 # Global array to store captured packets
@@ -16,7 +16,7 @@ packet_lock = threading.Lock()
 
 def packet_handler(packet):
     """Handle captured packets"""
-    if IP in packet and packet[IP].dst == ENTRY_ADDR:
+    if IP in packet and packet[IP].dst == ENTRY_ADDR and len(packet) == 602: # Standard tor packet size 512B
         with packet_lock:
             packet_info = {
                 'src': packet[IP].src,
@@ -24,6 +24,7 @@ def packet_handler(packet):
                 'time': time.time(),
                 'size': len(packet)
             }
+
             captured_packets.append(packet_info)
 
 def send_packets():
