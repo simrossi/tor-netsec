@@ -10,7 +10,7 @@ AddressDisableIPv6 1
 
 # Activate control port for Nyx
 ControlPort 9051
-HashedControlPassword 16:50718F5106BBABC360E50C692440E9EED5413930420ADB31C50515D0CA # Hashed password 'tor'
+HashedControlPassword 16:... # Put your hashed password here (tor --hash-password <password>)
 
 # Listen for Tor connections on specified port
 ORPort 9001 IPv4Only
@@ -19,16 +19,13 @@ ORPort 9001 IPv4Only
 SocksPort 0
 
 # Set server nickname to use as reference instead of the fingerprint
-Nickname exit1
+Nickname <exit_name>
 
 # Set server address. Needed when running on private subnets.
-Address 192.168.2.4
-
-# Set contact info for good practice.
-ContactInfo exit1
+Address <exit_address>
 
 # Run as an exit relay with default policy
 ExitRelay 1
 
 # Directory authorities information
-DirAuthority da1 orport=9001 no-v2 v3ident=...
+DirAuthority <da_name> orport=9001 no-v2 v3ident=...

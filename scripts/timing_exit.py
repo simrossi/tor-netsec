@@ -18,11 +18,16 @@ packet_lock = threading.Lock()
 def packet_handler(packet):
     """Handle captured packets"""
     if IP in packet and packet[IP].src == EXIT_ADDR and len(packet) == 602: # Standard tor packet size 512B
-        endpoint = None
 
         # Check for TCP and Raw layers (likely to contain HTTP)
         if packet.haslayer(TCP) and packet.haslayer(Raw):
             payload = packet[Raw].load.decode(errors='ignore')
+            service = None
+
+            if 'HTTP' in payload:
+                match = re.search(r'^Host:\s*(.+)', payload, re.MULTILINE)
+                if match:
+                    service = match.group(1).strip()
 
             with packet_lock:   
                 packet_info = {
@@ -30,7 +35,8 @@ def packet_handler(packet):
                     'dst': packet[IP].dst,
                     'time': time.time(),
                     'size': len(packet),
-                    #'payload': payload
+                    'service': service,
+                    #'payload': payload,
                 }
                 exit_packets.append(packet_info)
 
